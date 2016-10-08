@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Ooops!</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hi there!\n
+    Mason\n
+    Clare\n
+    Wcool\n
+    Charles\n
+    Mark\n
+    If you want involve Yo project which is just mini project. please do it! </string>
+
+
+    <string name="label_button_cta_canteen_intro" translatable="false">Get started</string>
+    <string name="title_canteen_intro1" translatable="false">가장 빠르고 심플하게 \r\n 친구에게 연락 할 수 있습니다.</string>
+    <string name="title_canteen_intro2" translatable="false">친구와 만남이 빨라집니다.</string>
+    <string name="title_canteen_intro3" translatable="false">Choose what you like</string>
+    <string name="description_canteen_intro1" translatable="false">한번의 터치로, Cool 하게 대화가 가능합니다.</string>
+    <string name="description_canteen_intro2" translatable="false">대화하지 않아도 Ooops만 있으면 바로 이야기 할 수 있습니다.</string>
+    <string name="description_canteen_intro3" translatable="false">Bookmark a menu you wanted to save and keep track of its status whether it\'s available or not.</string>
+
+</resources>
