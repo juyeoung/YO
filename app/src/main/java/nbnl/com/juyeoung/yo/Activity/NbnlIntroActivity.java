@@ -53,7 +53,7 @@ public class NbnlIntroActivity extends IntroActivity {
         addSlide(new SimpleSlide.Builder()
                 .title(R.string.title_canteen_intro3)
                 .description(R.string.description_canteen_intro3)
-                .image(R.drawable.art_canteen_intro3)
+                .image(R.drawable.ooops_logo)
                 .background(R.color.color_canteen)
                 .backgroundDark(R.color.color_dark_canteen)
                 .layout(R.layout.slide_nbnl)
