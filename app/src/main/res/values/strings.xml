@@ -13,9 +13,9 @@
     <string name="label_button_cta_canteen_intro" translatable="false">Get started</string>
     <string name="title_canteen_intro1" translatable="false">가장 빠르고 심플하게 \r\n 친구에게 연락 할 수 있습니다.</string>
     <string name="title_canteen_intro2" translatable="false">친구와 만남이 빨라집니다.</string>
-    <string name="title_canteen_intro3" translatable="false">Choose what you like</string>
+    <string name="title_canteen_intro3" translatable="false">Ooops는 2분이 지나면 \r\n 알림바를 삭제합니다.</string>
     <string name="description_canteen_intro1" translatable="false">한번의 터치로, Cool 하게 대화가 가능합니다.</string>
     <string name="description_canteen_intro2" translatable="false">대화하지 않아도 Ooops만 있으면 바로 이야기 할 수 있습니다.</string>
-    <string name="description_canteen_intro3" translatable="false">Bookmark a menu you wanted to save and keep track of its status whether it\'s available or not.</string>
+    <string name="description_canteen_intro3" translatable="false">당신의 쿨한 대화를 위해서 노력하겠습니다. \r\n 상대방의 상황을 실수인듯 가볍게 물어보고, \r\n 아니면 쿨하게 잊으세요 </string>
 
 </resources>
