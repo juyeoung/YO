@@ -8,8 +8,19 @@
     android:background="@color/color_canteen"
     tools:context=".Activity.MainActivity">
 
+    <include layout="@layout/content_main"
+        android:id="@+id/margin"/>
 
-    <include layout="@layout/content_main" />
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:id="@+id/toolbar"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/color_nbnl_yellow"
+        android:elevation="@dimen/elevation_header"
+        android:focusableInTouchMode="false"
+        app:layout_scrollFlags="scroll|enterAlways">
+
+    </android.support.v7.widget.Toolbar>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

@@ -8,19 +8,23 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toolbar;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import nbnl.com.juyeoung.yo.Controller.TravelListAdapter;
+import nbnl.com.juyeoung.yo.Helper.RecyclerViewPositionHelper;
 import nbnl.com.juyeoung.yo.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,26 +36,27 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private TravelListAdapter mAdapter;
-    private Toolbar toolbar;
+    private Toolbar mToolbar;
+    private RelativeLayout mLayoutInRecycleView;
 
     private static final String TAG = "MyFirebaseToken";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        startActivity(new Intent(this,NbnlIntroActivity.class));
+        startActivity(new Intent(this, NbnlIntroActivity.class));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
 
+
+        //add Toolbar
+        setupToolbar();
 
         //추가한 라인
         FirebaseMessaging.getInstance().subscribeToTopic("news");
         String token = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Refreshed token: " + token);
-
 
 
         isListView = true;
@@ -62,10 +67,13 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new TravelListAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
-        TravelListAdapter.OnItemClickListener onItemClickListener = new TravelListAdapter.OnItemClickListener(){
+        mRecyclerView.setOnScrollListener(onScrollListener);
+
+        TravelListAdapter.OnItemClickListener onItemClickListener = new TravelListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
 
+                Toast.makeText(MainActivity.this, "Clicked " + position, Toast.LENGTH_SHORT).show();
 //                Intent intent = new Intent(MainActivity.this,DetailActivity.class);
 //                intent.putExtra(DetailActivity.EXTRA_PARAM_ID,position);
 
@@ -97,13 +105,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setUpActionBar() {
-        if (toolbar != null) {
-            setActionBar(toolbar);
-            getActionBar().setDisplayHomeAsUpEnabled(false);
-            getActionBar().setDisplayShowTitleEnabled(true);
-            getActionBar().setElevation(7);
+    private void setupToolbar() {
+        mToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            mLayoutInRecycleView = (RelativeLayout) findViewById(R.id.content_main_rl);
+            //getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+        mToolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
     }
 
     @Override
@@ -138,5 +148,106 @@ public class MainActivity extends AppCompatActivity {
             isListView = true;
             mStaggeredLayoutManager.setSpanCount(1);
         }
+    }
+
+
+    //스크롤뷰
+    public RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
+
+        private static final int HIDE_THRESHOLD = 20;
+        private int scrolledDistance = 0;
+        private boolean controlsVisible = true;
+
+        RecyclerViewPositionHelper mRecyclerViewHelper;
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+
+
+            mRecyclerViewHelper = RecyclerViewPositionHelper.createHelper(recyclerView);
+
+//            visibleItemCount = recyclerView.getChildCount();
+//            totalItemCount = mRecyclerViewHelper.getItemCount();
+            int firstVisibleItem = mRecyclerViewHelper.findFirstVisibleItemPosition();
+
+            //show views if first item is first visible position and views are hidden
+            if (firstVisibleItem == 0) {
+                if (!controlsVisible) {
+                    onShow();
+                    controlsVisible = true;
+                }
+            } else {
+                if (scrolledDistance > HIDE_THRESHOLD && controlsVisible) {
+                    onHide();
+
+                    controlsVisible = false;
+                    scrolledDistance = 0;
+                } else if (scrolledDistance < -HIDE_THRESHOLD && !controlsVisible) {
+                    onShow();
+                    controlsVisible = true;
+                    scrolledDistance = 0;
+                }
+            }
+
+            if ((controlsVisible && dy > 0) || (!controlsVisible && dy < 0)) {
+                scrolledDistance += dy;
+            }
+        }
+    };
+
+    private void onHide() {
+        //mToolbar.animate().translationY(-mToolbar.getBottom()-100).setInterpolator(new AccelerateInterpolator(2)).start();
+
+        mToolbar.animate()
+                .translationY(-mToolbar.getBottom())
+                .alpha(0)
+                .setDuration(800)
+                .setInterpolator(new DecelerateInterpolator());
+
+
+
+
+
+
+//        mToolbar.setVisibility(View.INVISIBLE);
+//        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabButton.getLayoutParams();
+//        int fabBottomMargin = lp.bottomMargin;
+//        mFabButton.animate().translationY(mFabButton.getHeight()+fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
+
+
+//        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mRecyclerView.getLayoutParams();
+//
+//        int fabBottomMargin = lp.bottomMargin;
+//
+//        mRecyclerView.animate().translationY(mToolbar.getHeight()+fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
+    }
+
+    private void onShow() {
+//        mToolbar.setVisibility(View.VISIBLE);
+//        mToolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+
+        mToolbar.animate()
+                .translationY(0)
+                .alpha(1)
+                .setDuration(800)
+                .setInterpolator(new DecelerateInterpolator());
+
+
+
+//        ViewGroup.MarginLayoutParams marginsParams = new ViewGroup.MarginLayoutParams(mToolbar.getLayoutParams());
+//        marginsParams.setMargins(0,20,0,0);
+//
+//        mLayoutInRecycleView.setLayoutParams(marginsParams);
+
+//        RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams)mLayoutInRecycleView.getLayoutParams();
+//        relativeParams.setMargins(0, 80, 0, 0);  // left, top, right, bottom
+//        mLayoutInRecycleView.setLayoutParams(relativeParams);
+
+
+
+
+
+//        mRecyclerView.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
 }
